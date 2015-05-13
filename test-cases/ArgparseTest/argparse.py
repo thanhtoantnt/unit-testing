@@ -1,3 +1,4 @@
+
 """
 Split each string of the output file of Chef engine
 Output of this function is a string that is input of HTMLParser function
@@ -67,7 +68,8 @@ def splitInput(file_name, args_values):
 
 			#write value of each variable to file
 			if (output_arg1_name is not "default" and output_arg1_name is not "default" 
-				and output_arg1 is not "default" and output_arg2 is not "default"):
+			and output_arg1 is not "default" and output_arg2 is not "default"):
+				#print (output_arg1 == output_arg2 == output_arg1_name == output_arg2_name == "\x00\x00\x00")
 				write_file.write(output_arg1_name)
 				write_file.write("and")
 				write_file.write(output_arg2_name)
@@ -77,8 +79,11 @@ def splitInput(file_name, args_values):
 				write_file.write(output_arg2)
 				write_file.write("\n")
 
+
+
 	read_file.close()
 	write_file.close()
+
 
 
 """
@@ -109,9 +114,10 @@ def create_test_cases(input_file, output_file):
 		write_file.write("\n")
 		counter = counter + 1 # increase counter of test cases
 		input_string = line.split("and") #split to comput input values
+	
 		last_input = input_string[3].split("\n")[0]  #last input with \n
-		#compute result
 		write_file.write("\t\t")
+
 		write_file.write("result = ArgarseTestFunction(" + str(input_string[0]) + ", " + str(input_string[1])
 							+ ", " +str(input_string[2]) + ", " + str(last_input) + ")" + "\n")
 		#write assert 
@@ -129,7 +135,19 @@ def create_test_cases(input_file, output_file):
 	read_file.close()
 
 
-#splitInput("hl_test_cases.dat", "arg_1.txt", "arg_2.txt", "arg_3.txt", "arg_4.txt")
-splitInput("all_test_cases.dat", "args_values.txt")
-create_test_cases("args_values.txt", "test_cases.py")
+def checking(file_name, output_file):
+	
+	read = open(file_name, 'r')
+	write = open(output_file, 'w')
+	checking_line = read.readline()
+	write.write(checking_line)
+	for line in read:
+		if not(line == checking_line):
+			args = line.split("and")
+			last_input = args[3].split("\n")[0]
+			write.write(args[0] + "and" + args[1] + "and" + args[2] + "and" + args[3])
 
+
+splitInput("all_test_cases.dat", "args_values.txt")
+checking("args_values.txt", "checked_inputs.txt")
+create_test_cases("checked_inputs.txt", "test_cases.py")

@@ -6,8 +6,8 @@ def splitInput(file_name, output_file):
 	read_file = open(file_name,'r')
 	write_file = open(output_file, 'w')
 	for line in read_file:
-		if (len(line.split(" html")) == 2):
-			split_line = line.split(" html")[1]
+		if (len(line.split(" input")) == 2):
+			split_line = line.split(" input")[1]
 			if (len(split_line.split("=>")) == 2) :
 				output_line = split_line.split("=>")[1]
 				write_file.write(output_line)
@@ -28,12 +28,16 @@ def create_test_cases(input_file, output_file):
 	# write modified python file 
 	# modified symbolic test into file that can run concrete testing
 	write_file.write("import unittest\n")
-	write_file.write("import HTMLParser\n")
+	write_file.write("import cStringIO\n")
+	write_file.write("import ConfigParser\n")
 	write_file.write("\n")
-	write_file.write("class HTMLParserTestFunction(unittest.TestCase):\n"
-	+ "\t" + "parser = HTMLParser.HTMLParser()	" + "\n"
-	+ "\t" + "parser.feed(input_string)" + "\n"
-	+ "\t" + "parser.close()"	+ "\n\n")
+	write_file.write("class ConfigParserTestFunction(input_string):\n"
+	+ "\t" + "string_file = cStringIO.StringIO(input_string)" + "\n"
+	+ "\t" + "config = ConfigParser.ConfigParser()" + "\n"
+	+ "\t" + "config.readfp(string_file)"	+ "\n\n"
+	+ "\t" + "for s in config.sections():" + "\n"
+	+ "\t\t" + "config.options(s)" + "\n\n"
+	)
 	# end writing function
 
 	#start writing test cases
@@ -44,7 +48,7 @@ def create_test_cases(input_file, output_file):
 		counter = counter + 1
 		input_string = line.split("\n")[0]
 		write_file.write("\t\t")
-		write_file.write("result = HTMLParserTestFunction("+ str(input_string) + ")")
+		write_file.write("result = ConfigParserTestFunction("+ str(input_string) + ")")
 		write_file.write("\n")
 		write_file.write("\t\t")
 		write_file.write("self.assertEqual(result, expected_result)")
@@ -72,7 +76,6 @@ def checking(file_name, output_file):
 	for line in read:
 		if not(line == checking_line):
 			write.write(line)
-
 
 
 #start calling functions
